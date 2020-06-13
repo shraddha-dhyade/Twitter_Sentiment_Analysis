@@ -3,10 +3,6 @@ import time
 from kafka import SimpleProducer, KafkaClient
 import configparser
 
-# Note: Some of the imports are external python libraries. They are installed on the current machine.
-# If you are running multinode cluster, you have to make sure that these libraries
-# and currect version of Python is installed on all the worker nodes.
-
 class TweeterStreamProducer():
     """ A class to read the tweet stream and push it to Kafka"""
 
@@ -37,7 +33,6 @@ class TweeterStreamProducer():
 
 
 if __name__ == '__main__':
-    # To simulate twitter stream, we will load tweets from a file in a streaming fashion
     f = open('16M.txt')
     stream = TweeterStreamProducer()
     i=0
