@@ -23,7 +23,6 @@ def make_plot(counts):
     Plot the counts for the positive and negative words for each timestep.
     Use plt.show() so that the plot will popup.
     """
-    # YOUR CODE HERE
     positive = [];
     negative = [];
     for i in counts:
@@ -43,7 +42,6 @@ def load_wordlist(filename):
     """ 
     This function should return a list or set of words from the given filename.
     """
-    # YOUR CODE HERE
     wordlist = []
     with open(filename) as f:
         for word in f:
@@ -62,21 +60,14 @@ def stream(ssc, pwords, nwords, duration):
     tweets = kstream.map(lambda x: x[1])
 
     # Each element of tweets will be the text of a tweet.
-    # You need to find the count of all the positive and negative words in these tweets.
-    # Keep track of a running total counts and print this at every time step (use the pprint function).
-    # YOUR CODE HERE
     tweets = tweets.flatMap(lambda tweet: tweet.split(" "))
     tweets = tweets.map(lambda x: ("positive", 1) if x in pwords else ("positive", 0)).union(tweets.map(lambda x: ("negative", 1) if x in nwords else ("negative", 0)))
     tweets = tweets.reduceByKey(lambda x,y:x+y)
     totalCount = tweets.updateStateByKey(updateCount)
     totalCount.pprint()     
     
-    # Let the counts variable hold the word counts for all time steps
-    # You will need to use the foreachRDD function.
-    # For our implementation, counts looked like:
     #   [[("positive", 100), ("negative", 50)], [("positive", 80), ("negative", 60)], ...]
     counts = []
-    # YOURDSTREAMOBJECT.foreachRDD(lambda t,rdd: counts.append(rdd.collect()))
     tweets.foreachRDD(lambda t,rdd: counts.append(rdd.collect()))
     ssc.start()                         # Start the computation
     ssc.awaitTerminationOrTimeout(duration)
